@@ -1,27 +1,42 @@
 package refactoring;
 
+import refactoring.Rover.Action;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Rover {
-	public final Heading heading;
-	public final Position position;
+	private Heading heading;
+	private Position position;
 	Map<Order, Action> actions = new HashMap<>();
+
+
 
 	public Rover(String facing, int x, int y) {
 		this.heading=Heading.of(facing);
 		this.position = new Position(x,y);
 	}
 
+	//Static initializer for hash map:
 	public Rover(Heading heading, Position position) {
 		this.heading=heading;
 		this.position = position;
-		this.actions.put(Order.Forward, () -> this.position = this.Position.forward(this.heading));
+	}
+
+	{
+		this.actions.put(Order.Forward, () -> this.position = this.position.forward(this.heading));
+		this.actions.put(Order.Backward, () -> this.position = this.position.backward(this.heading));
+		this.actions.put(Order.Left, () -> this.heading = this.heading.turnLeft());
+		this.actions.put(Order.Right, () -> this.heading = this.heading.turnRight());
 	}
 	public void go(Order... orders){
 		for (Order order:orders) {
 				this.actions.get(order);
 		}
+	}
+	public void go(String a){
+		Arrays.stream(a.split(""))
 	}
 
 	public static class Position {

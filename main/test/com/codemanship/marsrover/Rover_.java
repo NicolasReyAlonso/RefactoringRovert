@@ -5,6 +5,7 @@ import refactoring.Rover.*;
 
 import static org.junit.Assert.*;
 import static refactoring.Rover.Heading.*;
+import static refactoring.Rover.Order.*;
 
 
 public class Rover_ {
