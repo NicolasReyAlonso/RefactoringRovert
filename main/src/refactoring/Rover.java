@@ -6,6 +6,7 @@ import java.util.Map;
 public class Rover {
 	public final Heading heading;
 	public final Position position;
+	Map<Order, Action> actions = new HashMap<>();
 
 	public Rover(String facing, int x, int y) {
 		this.heading=Heading.of(facing);
@@ -15,10 +16,11 @@ public class Rover {
 	public Rover(Heading heading, Position position) {
 		this.heading=heading;
 		this.position = position;
+		this.actions.put(Order.Forward, () -> this.position = this.Position.forward(this.heading));
 	}
 	public void go(Order... orders){
-		for (orders:actions) {
-
+		for (Order order:orders) {
+				this.actions.get(order);
 		}
 	}
 
@@ -96,10 +98,7 @@ public class Rover {
 	}
 	public enum Order { Forward, Backward, Left, Right; }
 
-	Map<Order, Action> actions = new HashMap<>(){
-		actions.put(Forward, () -> this.position = Position.forward(this.heading));
 
-	};
 
 	public interface Action {
 		void execute();
