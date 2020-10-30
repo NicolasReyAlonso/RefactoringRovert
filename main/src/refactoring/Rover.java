@@ -10,33 +10,36 @@ public class Rover {
 	private Heading heading;
 	private Position position;
 	Map<Order, Action> actions = new HashMap<>();
+	private Map <Position, Boolean> mapa = new HashMap<>();
 
-
-
-	public Rover(String facing, int x, int y) {
-		this.heading=Heading.of(facing);
-		this.position = new Position(x,y);
-	}
 
 	//Static initializer for hash map:
-	public Rover(Heading heading, Position position) {
-		this.heading=heading;
-		this.position = position;
-	}
-
 	{
 		this.actions.put(Order.Forward, () -> this.position = this.position.forward(this.heading));
 		this.actions.put(Order.Backward, () -> this.position = this.position.backward(this.heading));
 		this.actions.put(Order.Left, () -> this.heading = this.heading.turnLeft());
 		this.actions.put(Order.Right, () -> this.heading = this.heading.turnRight());
 	}
+
+	public Rover(String facing, int x, int y) {
+		this.heading=Heading.of(facing);
+		this.position = new Position(x,y);
+		updateMap();
+	}
+
+	public Rover(Heading heading, Position position) {
+		this.heading=heading;
+		this.position = position;
+		updateMap();
+	}
+
 	public void go(Order... orders){
 		for (Order order:orders) {
 				this.actions.get(order);
 		}
 	}
 	public void go(String a){
-		Arrays.stream(a.split(""))
+		Arrays.stream(a.split(""));
 	}
 
 	public static class Position {
@@ -46,6 +49,14 @@ public class Rover {
 		public Position(int x, int y) {
 			this.x = x;
 			this.y = y;
+		}
+
+		public int getX() {
+			return x;
+		}
+
+		public int getY() {
+			return y;
 		}
 
 		public Position forward(Heading heading) {
@@ -80,7 +91,29 @@ public class Rover {
 		}
 
 	}
+		private boolean BlockControl(Position xy){
+			updateMap();
+			return this.mapa.get(xy);
+		}
+		private boolean BlockControl(Map<Position,Boolean> mapa, Position xy){
+			return mapa.containsValue(xy);
+		}
 
+		private void updateMap(){
+			mapa.clear();
+			mapa.put(new Position(this.position.getX()+1,this.position.getY()), generateRanBool());
+			mapa.put(new Position(this.position.getX()-1,this.position.getY()), generateRanBool());
+			mapa.put(new Position(this.position.getX(),this.position.getY()-1), generateRanBool());
+			mapa.put(new Position(this.position.getX(),this.position.getY()+1), generateRanBool());
+		}
+
+
+		//metodo que genera booleanos aleatorios para probar "updateMap"
+		private boolean generateRanBool(){
+			if (Math.random() < 0.5){
+				return  false;
+			}return true;
+		}
 
 	public enum Heading {
 		North, East, South, West;
